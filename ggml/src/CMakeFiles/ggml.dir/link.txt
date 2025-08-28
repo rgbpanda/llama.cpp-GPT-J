@@ -1,0 +1,1 @@
+/usr/bin/c++ -fPIC -O3 -DNDEBUG -Wl,--dependency-file=CMakeFiles/ggml.dir/link.d -shared -Wl,-soname,libggml.so -o ../../bin/libggml.so "CMakeFiles/ggml.dir/ggml-backend-reg.cpp.o"  -Wl,-rpath,/home/randy/llama.cpp/bin: -ldl ../../bin/libggml-cpu.so ../../bin/libggml-cuda.so ../../bin/libggml-base.so /opt/cuda/targets/x86_64-linux/lib/stubs/libcuda.so -ldl

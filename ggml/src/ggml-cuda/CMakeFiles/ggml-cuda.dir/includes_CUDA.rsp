@@ -1,0 +1,1 @@
+-I"/home/randy/llama.cpp/ggml/src/ggml-cuda/.." -I/home/randy/llama.cpp/ggml/src/../include -isystem "/opt/cuda/targets/x86_64-linux/include"

@@ -3782,9 +3782,9 @@ class GPTJModel(TextModel):
 
         # GPT-J weight matrix transformations (similar to GPT-2)
         # Based on the model architecture, these likely need transposing
-        if name.endswith((".q_proj.weight", ".k_proj.weight", ".v_proj.weight", 
-                         ".out_proj.weight", ".fc_in.weight", ".fc_out.weight")):
-            data_torch = data_torch.transpose(1, 0)
+        # if name.endswith((".q_proj.weight", ".k_proj.weight", ".v_proj.weight", 
+        #                  ".out_proj.weight", ".fc_in.weight", ".fc_out.weight")):
+        #     data_torch = data_torch.transpose(1, 0)
 
         new_name = self.map_tensor_name(name)
         tensors.append((new_name, data_torch))
