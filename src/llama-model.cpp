@@ -9515,7 +9515,7 @@ struct llm_build_gptj : public llm_graph_context {
 
         auto * inp_attn = build_attn_inp_kv();
 
-        // GPTJ: No positional embeddings added here (uses rotary instead)
+        // No positional embeddings added here (uses rotary instead)
         cb(inpL, "inpL", -1);
 
         ggml_tensor * inp_out_ids = build_inp_out_ids();
@@ -9536,7 +9536,7 @@ struct llm_build_gptj : public llm_graph_context {
             // self-attention
             ggml_tensor * attn_out;
             {
-                // GPTJ: Separate Q, K, V projections (not combined like GPT2)
+                // Separate Q, K, V projections
                 ggml_tensor * Qcur = build_lora_mm(model.layers[il].wq, attn_inp);
                 ggml_tensor * Kcur = build_lora_mm(model.layers[il].wk, attn_inp);
                 ggml_tensor * Vcur = build_lora_mm(model.layers[il].wv, attn_inp);
@@ -9563,7 +9563,7 @@ struct llm_build_gptj : public llm_graph_context {
                 cb(attn_out, "attn_out", il);
             }
 
-            // FFN - processes the SAME input as attention (parallel structure!)
+            // FFN - processes the same input as attention (parallel structure)
             ggml_tensor * ffn_out;
             {
                 cur = build_lora_mm(model.layers[il].ffn_up, attn_inp);  // Use attn_inp, same as attention!
@@ -9583,7 +9583,7 @@ struct llm_build_gptj : public llm_graph_context {
                 layer_inp = ggml_get_rows(ctx0, layer_inp, inp_out_ids);
             }
 
-            // GPTJ: Combine attention + FFN + original input (parallel structure!)
+            // Combine attention + FFN + original input (parallel structure)
             cur = ggml_add(ctx0, attn_out, ffn_out);
             cur = ggml_add(ctx0, cur, layer_inp);
 
