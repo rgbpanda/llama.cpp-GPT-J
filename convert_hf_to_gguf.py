@@ -3747,24 +3747,20 @@ class GPTJModel(TextModel):
     model_arch = gguf.MODEL_ARCH.GPTJ
 
     def set_gguf_parameters(self):
-        # Based on GPTJConfig defaults and your model's output
-        # n_vocab = 50400, n_ctx = 2048, n_embd = 4096, n_head = 16, n_layer = 28, n_rot = 64
-        
-        self.gguf_writer.add_block_count(self.hparams["n_layer"])  # 28
-        self.gguf_writer.add_context_length(self.hparams["n_positions"])  # 2048  
-        self.gguf_writer.add_embedding_length(self.hparams["n_embd"])  # 4096
-        
-        # GPT-J uses n_inner for FFN size, defaults to 4 * n_embd if None
+        self.gguf_writer.add_block_count(self.hparams["n_layer"])
+        self.gguf_writer.add_context_length(self.hparams["n_positions"])
+        self.gguf_writer.add_embedding_length(self.hparams["n_embd"])
+
         n_inner = self.hparams.get("n_inner")
         if n_inner is None:
             n_inner = 4 * self.hparams["n_embd"]
         self.gguf_writer.add_feed_forward_length(n_inner)
         
-        self.gguf_writer.add_head_count(self.hparams["n_head"])  # 16
-        self.gguf_writer.add_layer_norm_eps(self.hparams["layer_norm_epsilon"])  # 1e-5
+        self.gguf_writer.add_head_count(self.hparams["n_head"])
+        self.gguf_writer.add_layer_norm_eps(self.hparams["layer_norm_epsilon"])
         
-        # GPT-J specific: rotary embedding dimension
-        self.gguf_writer.add_rope_dimension_count(self.hparams["rotary_dim"])  # 64
+        # rotary embedding dimension
+        self.gguf_writer.add_rope_dimension_count(self.hparams["rotary_dim"])
         
         self.gguf_writer.add_file_type(self.ftype)
 
@@ -3773,26 +3769,14 @@ class GPTJModel(TextModel):
         
         tensors: list[tuple[str, Tensor]] = []
 
-        # Skip bias tensors that aren't needed (similar to GPT-2)
-        # Skip bias tensors that aren't needed (same as GPT-2)
         if name.endswith((".attn.bias", ".attn.masked_bias")):
-            # GPT-J might have bias tensors we don't need
-            logger.debug(f"Skipping bias tensor: {name}")
             return tensors
-
-        # GPT-J weight matrix transformations (similar to GPT-2)
-        # Based on the model architecture, these likely need transposing
-        # if name.endswith((".q_proj.weight", ".k_proj.weight", ".v_proj.weight", 
-        #                  ".out_proj.weight", ".fc_in.weight", ".fc_out.weight")):
-        #     data_torch = data_torch.transpose(1, 0)
 
         new_name = self.map_tensor_name(name)
         tensors.append((new_name, data_torch))
-
         return tensors
 
     def set_vocab(self):
-        # GPT-J uses GPT-2 style BPE tokenizer
         self._set_vocab_gpt2()
 
 
