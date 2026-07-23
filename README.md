@@ -1,3 +1,8 @@
+# llama.cpp - GPT-J
+
+All credit/license is from llama.cpp project below. This just adds GPT-J support. It's a fork I made previously for my own use. It's too diverged from the latest main of llama.cpp for me to bother trying to keep up to date, but the `convert_hf_to_gguf.py` works with GPT-J models and it can run GPT-J models for inference as well
+
+
 # llama.cpp
 
 ![llama](https://user-images.githubusercontent.com/1991296/230134379-7181e485-c521-4d23-a0d6-f7b3b61ba524.png)
